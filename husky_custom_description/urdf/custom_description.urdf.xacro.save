@@ -1,0 +1,313 @@
+<?xml version="1.0"?>
+<!--
+Software License Agreement (BSD)
+\file      description.urdf.xacro
+\authors   Paul Bovbel <pbovbel@clearpathrobotics.com>, Devon Ash <dash@clearpathrobotics.com>
+\copyright Copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that
+the following conditions are met:
+ * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+   following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+   following disclaimer in the documentation and/or other materials provided with the distribution.
+ * Neither the name of Clearpath Robotics nor the names of its contributors may be used to endorse or promote
+   products derived from this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WAR-
+RANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, IN-
+DIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<robot name="husky" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find husky_ur_description)/urdf/husky_ur5_description.urdf.xacro" />
+  <xacro:include filename="$(find robotiq_2f_140_gripper_visualization)/urdf/robotiq_arg2f_140_model.xacro" />
+  <xacro:c_model_open parent="ur_arm_tool0" prefix=""/>
+
+  <xacro:arg name="laser_enabled" default="$(optenv HUSKY_LMS1XX_ENABLED false)" />
+<!--
+  <xacro:arg name="ur5_enabled" default="$(optenv HUSKY_UR5_ENABLED false)" />
+  <xacro:arg name="kinect_enabled" default="false" />
+-->
+  <!-- Insert Customizations Below -->
+
+
+  <link name="ur5_top_plate">
+    <visual>
+      <geometry>
+        <mesh filename="package://husky_custom_description/meshes/UR5_Top_Plate.STL"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="top_plate_link_to_base" type="fixed">
+    <parent link="base_link"/>
+    <child link="ur5_top_plate"/>
+    <origin xyz="0.085 0.0 0.23" rpy="0.0 0.0 0.0"/>
+  </joint>
+
+
+  <link name="Arch">
+    <visual>
+      <geometry>
+        <mesh filename="package://husky_custom_description/meshes/BIR03_Husky_Arch.STL"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="top_plate_link_to_Arch" type="fixed">
+    <parent link="ur5_top_plate"/>
+    <child link="Arch"/>
+    <origin xyz="-0.375 0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </joint>
+  
+ <!-- load model of LMS1xx and mount -->
+ <link name="sick_mount_link">
+   <visual>
+     <origin xyz="0 0 0" rpy="0 0 0"/>
+     <geometry>
+       <mesh filename="package://husky_custom_description/meshes/LMS1xx.STL"/>
+     </geometry>
+     <material name="white">
+        <color rgba="0.4 0.4 0.4 1"/>
+      </material>
+   </visual>
+   <collision>
+     <origin xyz="0 0 0"/>
+     <geometry>
+       <mesh filename="package://husky_custom_description/meshes/LMS1xx.STL"/>
+     </geometry>
+   </collision>
+ </link>
+ <joint name="sick_mount_joint" type="fixed">
+   <parent link="base_link" />
+   <child link="sick_mount_link" />
+   <origin xyz="0.470 0 0.17" rpy="0 0 0" />
+ </joint>
+
+<!-- Create laser link for LMS1xx data -->
+ <link name="laser">
+   <origin xyz="0 0 0" rpy="0 0 0"/>
+ </link>
+
+ <joint name="sick_sensor_joint" type="fixed">
+   <parent link="sick_mount_link" />
+   <child link="laser" />
+   <origin xyz="0.0 0 0.0" rpy="0 0 0" />
+ </joint>
+
+<!-- Create link for GPS data -->
+ <link name="navsat">
+   <origin xyz="0 0 0" rpy="0 0 0"/>
+ </link>
+
+ <joint name="GPS_sensor_joint" type="fixed">
+   <parent link="Arch" />
+   <child link="navsat" />
+   <origin xyz="0.01 0.26 0.50" rpy="0 0 0" />
+ </joint>
+
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find robotiq_2f_140_gripper_visualization)/urdf/robotiq_arg2f_transmission.xacro" />
+
+  <xacro:macro name="outer_knuckle" params="prefix fingerprefix stroke">
+    <link name="${prefix}${fingerprefix}_outer_knuckle">
+      <inertial>
+        <origin xyz="-0.000200000000003065 0.0199435877845359 0.0292245259211331" rpy="0 0 0" />
+        <mass value="0.00853198276973456" />
+        <inertia
+            ixx="2.89328108496468E-06"
+            ixy="-1.57935047237397E-19"
+            ixz="-1.93980378593255E-19"
+            iyy="1.86719750325683E-06"
+            iyz="-1.21858577871576E-06"
+            izz="1.21905238907251E-06" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://robotiq_2f_140_gripper_visualization/meshes/robotiq_arg2f_${stroke}_outer_knuckle.stl" />
+        </geometry>
+        <material name="">
+          <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://robotiq_2f_140_gripper_visualization/meshes/robotiq_arg2f_${stroke}_outer_knuckle.stl" />
+        </geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="outer_finger" params="prefix fingerprefix stroke">
+    <link name="${prefix}${fingerprefix}_outer_finger">
+      <inertial>
+        <origin xyz="0.00030115855001899 0.0373907951953854 -0.0208027427000385" rpy="0 0 0" />
+        <mass value="0.022614240507152" />
+        <inertia
+            ixx="1.52518312458174E-05"
+            ixy="9.76583423954399E-10"
+            ixz="-5.43838577022588E-10"
+            iyy="6.17694243867776E-06"
+            iyz="6.78636130740228E-06"
+            izz="1.16494917907219E-05" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://robotiq_2f_140_gripper_visualization/meshes/robotiq_arg2f_${stroke}_outer_finger.stl" />
+        </geometry>
+        <material name="">
+          <color rgba="0.1 0.1 0.1 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://robotiq_2f_140_gripper_visualization/meshes/robotiq_arg2f_${stroke}_outer_finger.stl" />
+        </geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="inner_knuckle" params="prefix fingerprefix stroke">
+    <link name="${prefix}${fingerprefix}_inner_knuckle">
+      <inertial>
+        <origin xyz="0.000123011831763771 0.0507850843201817 0.00103968640075166" rpy="0 0 0" />
+        <mass value="0.0271177346495152" />
+        <inertia
+            ixx="2.61910379223783E-05"
+            ixy="-2.43616858946494E-07"
+            ixz="-6.37789906117123E-09"
+            iyy="2.8270243746167E-06"
+            iyz="-5.37200748039765E-07"
+            izz="2.83695868220296E-05" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://robotiq_2f_140_gripper_visualization/meshes/robotiq_arg2f_${stroke}_inner_knuckle.stl" />
+        </geometry>
+        <material name="">
+          <color rgba="0.1 0.1 0.1 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://robotiq_2f_140_gripper_visualization/meshes/robotiq_arg2f_${stroke}_inner_knuckle.stl" />
+        </geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="inner_finger" params="prefix fingerprefix stroke">
+    <link name="${prefix}${fingerprefix}_inner_finger">
+      <inertial>
+        <origin xyz="0.000299999999999317 0.0160078233491243 -0.0136945669206257" rpy="0 0 0" />
+        <mass value="0.0104003125914103" />
+        <inertia
+            ixx="2.71909453810972E-06"
+            ixy="1.35402465472579E-21"
+            ixz="-7.1817349065269E-22"
+            iyy="7.69100314106116E-07"
+            iyz="6.74715432769696E-07"
+            izz="2.30315190420171E-06" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://robotiq_2f_140_gripper_visualization/meshes/robotiq_arg2f_${stroke}_inner_finger.stl" />
+        </geometry>
+        <material name="">
+          <color rgba="0.1 0.1 0.1 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://robotiq_2f_140_gripper_visualization/meshes/robotiq_arg2f_${stroke}_inner_finger.stl" />
+        </geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="outer_finger_joint" params="prefix fingerprefix">
+    <joint name="${prefix}${fingerprefix}_outer_finger_joint" type="fixed">
+      <origin xyz="0 0.01821998610742 0.0260018192872234" rpy="0 0 0" />
+      <parent link="${prefix}${fingerprefix}_outer_knuckle" />
+      <child link="${prefix}${fingerprefix}_outer_finger" />
+      <axis xyz="1 0 0" />
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="inner_knuckle_joint" params="prefix fingerprefix reflect">
+    <joint name="${prefix}${fingerprefix}_inner_knuckle_joint" type="revolute">
+      <origin xyz="0 ${reflect * -0.0127} 0.06142" rpy="${pi / 2 + .725} 0 ${(reflect - 1) * pi / 2}" />
+      <parent link="${prefix}ur_arm_tool0" />
+      <child link="${prefix}${fingerprefix}_inner_knuckle" />
+      <axis xyz="1 0 0" />
+      <limit lower="0" upper="0.8757" velocity="2.0" effort="1000" />
+      <mimic joint="${prefix}finger_joint" multiplier="-1" offset="0" />
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="inner_finger_joint" params="prefix fingerprefix">
+    <joint name="${prefix}${fingerprefix}_inner_finger_joint" type="revolute">
+      <origin xyz="0 0.0817554015893473 -0.0282203446692936" rpy="-.725 0 0" />
+      <parent link="${prefix}${fingerprefix}_outer_finger" />
+      <child link="${prefix}${fingerprefix}_inner_finger" />
+      <axis xyz="1 0 0" />
+      <limit lower="0" upper="0.8757" velocity="2.0" effort="1000" />
+      <mimic joint="${prefix}finger_joint" multiplier="1" offset="0" />
+    </joint>
+  </xacro:macro>
+
+  <xacro:include filename="$(find robotiq_2f_140_gripper_visualization)/urdf/robotiq_arg2f.xacro" />
+
+  <xacro:macro name="finger_joint" params="prefix">
+    <joint name="${prefix}finger_joint" type="revolute">
+      <origin xyz="0 -0.030601 0.054905" rpy="${pi / 2 + .725} 0 0" />
+      <parent link="${prefix}ur_arm_tool0" />
+      <child link="${prefix}left_outer_knuckle" />
+      <axis xyz="-1 0 0" />
+      <limit lower="0" upper="0.775" velocity="2.0" effort="1000" />
+    </joint>
+    <xacro:finger_joints prefix="${prefix}" fingerprefix="left" reflect="1.0"/>
+  </xacro:macro>
+
+  <xacro:macro name="right_outer_knuckle_joint" params="prefix">
+    <joint name="${prefix}right_outer_knuckle_joint" type="revolute">
+      <origin xyz="0 0.030601 0.054905" rpy="${pi / 2 + .725} 0 ${pi}" />
+      <parent link="${prefix}ur_arm_tool0" />
+      <child link="${prefix}right_outer_knuckle" />
+      <axis xyz="1 0 0" />
+      <limit lower="0" upper="0.725" velocity="2.0" effort="1000" />
+    <mimic joint="${prefix}finger_joint" multiplier="-1" offset="0" />
+    </joint>
+    <xacro:finger_joints prefix="${prefix}" fingerprefix="right" reflect="-1.0"/>
+  </xacro:macro>
+
+  <xacro:macro name="robotiq_arg2f_140" params="prefix">
+    <xacro:ur_arm_tool0 prefix="${prefix}"/>
+    <xacro:finger_links prefix="${prefix}" fingerprefix="left" stroke="140"/>
+    <xacro:finger_links prefix="${prefix}" fingerprefix="right" stroke="140"/>
+    <xacro:finger_joint prefix="${prefix}"/>
+    <xacro:right_outer_knuckle_joint prefix="${prefix}"/>
+    <xacro:robotiq_arg2f_transmission prefix="${prefix}"/>
+  </xacro:macro>
+</robot>
+
+</robot>
+
