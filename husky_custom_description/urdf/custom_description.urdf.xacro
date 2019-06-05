@@ -65,7 +65,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <child link="Arch"/>
     <origin xyz="-0.375 0.0 0.0" rpy="0.0 0.0 0.0"/>
   </joint>
-
+  
  <!-- load model of LMS1xx and mount -->
  <link name="sick_mount_link">
    <visual>
@@ -130,3 +130,4 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
  </joint>
 
 </robot>
+
