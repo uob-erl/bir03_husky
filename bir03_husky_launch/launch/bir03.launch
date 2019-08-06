@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<!-- SLAM -->
+  <include file="$(find bir03_husky_launch)/launch/slam_gmaping.launch" />
+
+<!-- Movebase-->
+  <include file="$(find bir03_husky_launch)/launch/move_base.launch" />
+
+<!-- UR5 drivers -->
+  <include file="$(find husky_ur_bringup)/launch/husky_ur_bringup.launch" />
+
+<!-- Moveit! -->
+  <include file="$(find husky_ur_moveit_config)/launch/husky_ur_moveit_planning_execution.launch" />
+
+
+</launch>

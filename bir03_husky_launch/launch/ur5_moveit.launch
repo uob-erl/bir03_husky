@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<!-- UR5 drivers -->
+  <include file="$(find husky_ur_bringup)/launch/husky_ur_bringup.launch" />
+
+<!-- moveit! -->
+   <include file="$(find husky_ur_moveit_config)/launch/husky_ur_moveit_planning_execution.launch" />
+
+
+</launch>
