@@ -12,7 +12,7 @@
   <include file="$(find husky_ur_bringup)/launch/husky_ur_bringup.launch" />
 
 <!-- Moveit! -->
-  <include file="$(find husky_ur_moveit_config)/launch/husky_ur_moveit_planning_execution.launch" />
+  <!--include file="$(find husky_ur_moveit_config)/launch/husky_ur_moveit_planning_execution.launch" /-->
 
 
 </launch>
