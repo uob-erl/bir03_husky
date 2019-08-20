@@ -1,0 +1,9 @@
+<launch>
+
+  <arg name="map_file" value="$(find map)/provide_map/erl_arena2.yaml"></arg>
+  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)">
+  
+  </node>
+
+
+</launch>
