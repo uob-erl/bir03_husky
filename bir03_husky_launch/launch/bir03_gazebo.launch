@@ -28,17 +28,17 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <arg name="laser_enabled" default="false"/>
   <arg name="kinect_enabled" default="false"/>
   <arg name="husky_front_bumper_extend" default="0"/>
-  <!-- <arg name="urdf_extras" default="$(find husky_custom_description)/urdf/custom_description.urdf.xacro"/> -->
-  <arg name="urdf_extras" default="$(find husky_ur_description)/urdf/husky_ur5_description.urdf.xacro"/>
+  <arg name="urdf_extras" default="$(find husky_custom_description)/urdf/custom_description.urdf.xacro"/> 
+  <!--<arg name="urdf_extras" default="$(find husky_ur_description)/urdf/husky_ur5_description.urdf.xacro"/> -->
 
 
   <include file="$(find husky_gazebo)/launch/playpen.launch" />
 
   <include file="$(find husky_gazebo)/launch/spawn_husky.launch">
     <arg name="laser_enabled" value="$(arg laser_enabled)"/>
-    <arg name="kinect_enabled" value="$(arg kinect_enabled)"/>
+    <!--<arg name="kinect_enabled" value="$(arg kinect_enabled)"/> -->
     <arg name="urdf_extras" value="$(arg urdf_extras)"/>
-    <arg name="husky_front_bumper_extend" value="$(arg husky_front_bumper_extend)"/>
+    <!--<arg name="husky_front_bumper_extend" value="$(arg husky_front_bumper_extend)"/> -->
   </include>
 
   <!-- UR5 stuff -->
